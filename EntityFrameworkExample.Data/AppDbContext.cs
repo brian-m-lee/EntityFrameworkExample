@@ -11,7 +11,15 @@ namespace EntityFrameworkExample.Data
 			// Prefer connection string from environment, fallback to LocalDB for development
 			var connectionString = Environment.GetEnvironmentVariable("ConnectionStringForEntityFrameworkExample");
 
-			optionsBuilder.UseSqlServer(connectionString);
+			optionsBuilder.UseSqlServer(connectionString, x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Example"));
+		}
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			// Set your custom default schema here
+			modelBuilder.HasDefaultSchema("Example");
+
+			base.OnModelCreating(modelBuilder);
 		}
 	}
 }
