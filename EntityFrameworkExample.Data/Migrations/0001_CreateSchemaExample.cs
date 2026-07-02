@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EntityFrameworkExample.Data.Migrations
 {
 	[DbContext(typeof(AppDbContext))]
-	[Migration("20260701212903_CreateTablePerson")]
-	public class CreateTablePerson : Migration
+	[Migration("0001_CreateSchemaExample")]
+	public class CreateSchemaExample : Migration
 	{
 		protected override void Up(MigrationBuilder migrationBuilder)
 		{
@@ -13,25 +13,19 @@ namespace EntityFrameworkExample.Data.Migrations
 USE EntityFrameworkExample;
 GO
 
-IF OBJECT_ID(N'Example.People', N'U') IS NULL
-BEGIN
-CREATE TABLE [Example].[People]
-(
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[FirstName] [nvarchar](max) NOT NULL,
-	CONSTRAINT PK_People PRIMARY KEY ([Id])
-)
-END;
+IF SCHEMA_ID('Example') IS NULL 
+	EXEC('CREATE SCHEMA [Example]');
+GO
 ");
 		}
-		
+
 		protected override void Down(MigrationBuilder migrationBuilder)
 		{
 			migrationBuilder.Sql(@"
 USE EntityFrameworkExample;
 GO
 
-DROP TABLE IF EXISTS [Example].[People]
+DROP SCHEMA IF EXISTS [Example];
 GO
 ");
 		}
