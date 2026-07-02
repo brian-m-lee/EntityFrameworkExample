@@ -1,30 +1,39 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EntityFrameworkExample.Data.Migrations
 {
-	public partial class CreateTablePerson : Migration
+	[DbContext(typeof(AppDbContext))]
+	[Migration("20260701212903_CreateTablePerson")]
+	public class CreateTablePerson : Migration
 	{
 		protected override void Up(MigrationBuilder migrationBuilder)
 		{
-			migrationBuilder.CreateTable(
-				name: "People",
-				schema: "Example",
-				columns: table => new
-				{
-					Id = table.Column<int>(type: "int", nullable: false)
-						.Annotation("SqlServer:Identity", "1, 1"),
-					FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-				},
-				constraints: table =>
-				{
-					table.PrimaryKey("PK_People", x => x.Id);
-				});
+			migrationBuilder.Sql(@"
+USE EntityFrameworkExample;
+GO
+
+IF OBJECT_ID(N'Example.People', N'U') IS NULL
+BEGIN
+CREATE TABLE [Example].[People]
+(
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [nvarchar](max) NOT NULL,
+	CONSTRAINT PK_People PRIMARY KEY ([Id])
+)
+END;
+");
 		}
 		
 		protected override void Down(MigrationBuilder migrationBuilder)
 		{
-			migrationBuilder.DropTable(
-				name: "People");
+			migrationBuilder.Sql(@"
+USE EntityFrameworkExample;
+GO
+
+DROP TABLE IF EXISTS [Example].[People]
+GO
+");
 		}
 	}
 }
