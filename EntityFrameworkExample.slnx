@@ -1,0 +1,4 @@
+<Solution>
+	<Project Path="EntityFrameworkExample.ConsoleApp/EntityFrameworkExample.ConsoleApp.csproj" />
+	<Project Path="EntityFrameworkExample.Data/EntityFrameworkExample.Data.csproj" />
+</Solution>
