@@ -1,4 +1,5 @@
 ﻿using EntityFrameworkExample.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkExample.ConsoleApp
 {
@@ -7,7 +8,7 @@ namespace EntityFrameworkExample.ConsoleApp
 		static void Main(string[] args)
 		{
 			using var db = new AppDbContext();
-			db.Database.EnsureCreated();
+			db.Database.Migrate();
 
 			// Add sample data
 			if (!db.People.Any())

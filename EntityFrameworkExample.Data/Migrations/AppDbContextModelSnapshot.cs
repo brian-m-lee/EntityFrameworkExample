@@ -35,7 +35,7 @@ namespace EntityFrameworkExample.Data.Migrations
 
 				b.HasKey("Id");
 
-				b.ToTable("People");
+				b.ToTable("People", "Example");
 			});
 #pragma warning restore 612, 618
 		}

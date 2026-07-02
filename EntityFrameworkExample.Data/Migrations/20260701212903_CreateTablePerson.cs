@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace EntityFrameworkExample.Data.Migrations
 {
-	/// <inheritdoc />
-	public partial class InitialCreate : Migration
+	public partial class CreateTablePerson : Migration
 	{
-		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)
 		{
 			migrationBuilder.CreateTable(
 				name: "People",
+				schema: "Example",
 				columns: table => new
 				{
 					Id = table.Column<int>(type: "int", nullable: false)
@@ -23,8 +20,7 @@ namespace EntityFrameworkExample.Data.Migrations
 					table.PrimaryKey("PK_People", x => x.Id);
 				});
 		}
-
-		/// <inheritdoc />
+		
 		protected override void Down(MigrationBuilder migrationBuilder)
 		{
 			migrationBuilder.DropTable(
