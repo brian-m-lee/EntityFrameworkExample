@@ -1,15 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EntityFrameworkExample.Settings;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkExample.Data
 {
-	public class AppDbContext : DbContext
+	public class AppDbContext
+		: DbContext
 	{
+		private readonly IConnectionStringBuilder connectionStringBuilder;
+
+		public AppDbContext(IConnectionStringBuilder connectionStringBuilder, DbContextOptions<AppDbContext> options)
+			: base(options)
+		{
+			this.connectionStringBuilder = connectionStringBuilder;
+		}
+
 		public DbSet<Person> People => Set<Person>();
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			// Prefer connection string from environment, fallback to LocalDB for development
-			var connectionString = Environment.GetEnvironmentVariable("ConnectionStringForEntityFrameworkExample");
+			var connectionString = connectionStringBuilder.Build();
 
 			optionsBuilder.UseSqlServer(connectionString, x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Example"));
 		}
