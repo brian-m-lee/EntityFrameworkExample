@@ -1,30 +1,40 @@
 ﻿using EntityFrameworkExample.Data;
+using EntityFrameworkExample.Settings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace EntityFrameworkExample.ConsoleApp
-{
-	internal class Program
+var appDbContext = Host.CreateDefaultBuilder(args)
+	.ConfigureServices((hostContext, services) =>
 	{
-		static void Main(string[] args)
-		{
-			using var db = new AppDbContext();
-			db.Database.Migrate();
+		services.AddDbContext<AppDbContext>();
 
-			// Add sample data
-			if (!db.People.Any())
-			{
-				db.People.Add(new Person { FirstName = "Alice" });
-				db.People.Add(new Person { FirstName = "Bob" });
-				db.SaveChanges();
-			}
+		services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
+			.SetBasePath(AppContext.BaseDirectory)
+			.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+			.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true)
+			.Build()
+		);
 
-			// Query and print
-			var people = db.People.OrderBy(p => p.Id).ToList();
-			Console.WriteLine("People in database:");
-			foreach (var p in people)
-			{
-				Console.WriteLine($"- ({p.Id}) {p.FirstName}");
-			}
-		}
-	}
+		services.AddScoped<IConnectionStringBuilder, ConnectionStringBuilder>();
+	})
+	.Build()
+	.Services
+	.GetRequiredService<AppDbContext>();
+
+await appDbContext.Database.MigrateAsync();
+
+if (!await appDbContext.People.AnyAsync())
+{
+	await appDbContext.People.AddAsync(new Person { FirstName = "Alice" });
+	await appDbContext.SaveChangesAsync();
+}
+
+var people = await appDbContext.People.ToListAsync();
+
+Console.WriteLine("People in database:");
+foreach (var p in people.OrderBy(p => p.Id))
+{
+	Console.WriteLine($"- ({p.Id}) {p.FirstName}");
 }

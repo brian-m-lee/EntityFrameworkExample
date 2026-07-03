@@ -1,4 +1,5 @@
 <Solution>
 	<Project Path="EntityFrameworkExample.ConsoleApp/EntityFrameworkExample.ConsoleApp.csproj" />
 	<Project Path="EntityFrameworkExample.Data/EntityFrameworkExample.Data.csproj" />
+	<Project Path="EntityFrameworkExample.Settings/EntityFrameworkExample.Settings.csproj" Id="ee57852d-bdfe-4e29-8f02-5b0f4783904e" />
 </Solution>
